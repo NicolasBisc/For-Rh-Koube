@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Koube Química — RH</title>
+
+  <!-- Google Fonts: Display + Body industriais e modernos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       CSS VARIABLES — Identidade Koube Química
+    ============================================================ */
+    :root {
+      --black:        #050608;
+      --dark:         #0a0c0f;
+      --dark-2:       #0f1217;
+      --green:        #00e676;
+      --green-dim:    #00b85a;
+      --green-glow:   rgba(0, 230, 118, 0.18);
+      --green-glow-s: rgba(0, 230, 118, 0.06);
+      --white:        #f0f4f0;
+      --white-dim:    rgba(240, 244, 240, 0.6);
+      --red:          #ff2d55;
+      --red-dim:      rgba(255, 45, 85, 0.75);
+      --border:       rgba(0, 230, 118, 0.15);
+      --border-dim:   rgba(0, 230, 118, 0.07);
+
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'Share Tech Mono', monospace;
+
+      --max-width: 960px;
+      --radius: 4px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ============================================================
+       BACKGROUND LAYER — Profundidade e atmosfera industrial
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%,   rgba(0,230,118,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 40% at 100% 100%, rgba(0,230,118,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 0% 50%,   rgba(0,184,90,0.03)  0%, transparent 60%),
+        linear-gradient(180deg, #050608 0%, #07090c 50%, #050608 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Grade tecnológica sutil no fundo */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,230,118,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,230,118,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ============================================================
+       CHECKBOX HACK — Mecanismo de interação (sem JS)
+    ============================================================ */
+    #trigger {
+      display: none;
+    }
+
+    /* ============================================================
+       WRAPPER
+    ============================================================ */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ============================================================
+       TOPBAR — Barra industrial superior
+    ============================================================ */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+      border-bottom: 1px solid var(--border-dim);
+      background: rgba(5, 6, 8, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-icon {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid var(--green);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 10px var(--green-glow);
+      flex-shrink: 0;
+    }
+
+    .topbar-icon::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--green);
+    }
+
+    .topbar-name {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.12em;
+      color: var(--white);
+    }
+
+    .topbar-name span {
+      color: var(--green);
+    }
+
+    .topbar-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--green-dim);
+      letter-spacing: 0.18em;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: var(--radius);
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       HERO — Seção central principal
+    ============================================================ */
+    .hero {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 80px 24px 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    /* Linhas decorativas laterais */
+    .hero::before,
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 220px;
+      background: linear-gradient(to bottom, transparent, var(--green-dim), transparent);
+      opacity: 0.35;
+    }
+    .hero::before { left: 40px; }
+    .hero::after  { right: 40px; }
+
+    /* Sub-tag acima do título */
+    .hero-pretitle {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--green-dim);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+
+    /* Título principal */
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 7.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 8px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.5s forwards;
+    }
+
+    .hero-title span {
+      color: var(--green);
+      text-shadow: 0 0 40px rgba(0,230,118,0.5), 0 0 80px rgba(0,230,118,0.2);
+    }
+
+    /* Linha decorativa abaixo do título */
+    .hero-divider {
+      width: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--green), transparent);
+      margin: 24px auto;
+      box-shadow: 0 0 12px var(--green-glow);
+      opacity: 0;
+      animation: fadeIn 0.8s ease 0.9s forwards;
+    }
+
+    /* Subtítulo */
+    .hero-sub {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      font-weight: 300;
+      color: var(--white-dim);
+      letter-spacing: 0.06em;
+      max-width: 560px;
+      line-height: 1.7;
+      margin-bottom: 52px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.1s forwards;
+    }
+
+    /* ============================================================
+       BOTÃO CENTRAL — "Clique aqui 💚"
+    ============================================================ */
+    .btn-wrapper {
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.3s forwards;
+    }
+
+    .btn-label {
+      display: inline-block;
+      cursor: pointer;
+      position: relative;
+      padding: 18px 52px;
+      border-radius: 50px;
+      border: 1.5px solid var(--green);
+      background: rgba(0,230,118,0.04);
+      color: var(--green);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow:
+        0 0 20px rgba(0,230,118,0.12),
+        inset 0 0 20px rgba(0,230,118,0.03);
+      transition:
+        transform var(--transition),
+        box-shadow var(--transition),
+        background var(--transition),
+        color var(--transition);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Anel de pulso no botão */
+    .btn-label::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 60px;
+      border: 1px solid rgba(0,230,118,0.2);
+      animation: pulse 2.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .btn-label::after {
+      content: '';
+      position: absolute;
+      inset: -14px;
+      border-radius: 66px;
+      border: 1px solid rgba(0,230,118,0.08);
+      animation: pulse 2.5s ease-in-out 0.5s infinite;
+      pointer-events: none;
+    }
+
+    .btn-label:hover {
+      transform: scale(1.05);
+      background: rgba(0,230,118,0.10);
+      box-shadow:
+        0 0 40px rgba(0,230,118,0.35),
+        0 0 80px rgba(0,230,118,0.12),
+        inset 0 0 30px rgba(0,230,118,0.06);
+      color: #fff;
+    }
+
+    .btn-label:active {
+      transform: scale(0.97);
+    }
+
+    /* ============================================================
+       CONTEÚDO REVELADO — aparece após o clique
+    ============================================================ */
+    .reveal-content {
+      display: none; /* escondido por padrão */
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding-top: 60px;
+    }
+
+    /* Quando o checkbox for marcado, mostramos */
+    #trigger:checked ~ .wrapper .reveal-content {
+      display: flex;
+    }
+
+    /* Escondemos o botão após o clique */
+    #trigger:checked ~ .wrapper .btn-wrapper {
+      display: none;
+    }
+
+    #trigger:checked ~ .wrapper .hero-sub {
+      display: none;
+    }
+
+    /* ============================================================
+       MENSAGEM PRINCIPAL — "Para o RH da Koube..."
+    ============================================================ */
+    .msg-main {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 5vw, 3.2rem);
+      letter-spacing: 0.04em;
+      line-height: 1.15;
+      text-transform: uppercase;
+      color: var(--white);
+      text-align: center;
+      max-width: 780px;
+      padding: 0 20px;
+      animation: revealMain 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .msg-main strong {
+      color: var(--green);
+      text-shadow: 0 0 30px rgba(0,230,118,0.6), 0 0 60px rgba(0,230,118,0.25);
+    }
+
+    .msg-main .emoji {
+      display: inline-block;
+      animation: rocketBounce 1.2s ease 0.9s both;
+    }
+
+    /* Linha separadora entre mensagens */
+    .msg-divider {
+      width: 2px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--green), transparent);
+      margin: 32px 0;
+      box-shadow: 0 0 10px var(--green-glow);
+      animation: fadeIn 0.7s ease 0.6s both;
+    }
+
+    /* ============================================================
+       MENSAGEM CARINHOSA — emocional
+    ============================================================ */
+    .msg-heart {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      animation: fadeUp 1s ease 0.5s both;
+    }
+
+    .msg-heart-text {
+      font-family: var(--font-body);
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--white-dim);
+      letter-spacing: 0.05em;
+      text-align: center;
+      max-width: 540px;
+      padding: 0 20px;
+      line-height: 1.7;
+    }
+
+    .msg-heart-text em {
+      color: var(--white);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    /* Badge decorativo */
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 10px 22px;
+      background: rgba(0,230,118,0.04);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--green-dim);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      animation: fadeIn 1s ease 1.2s both;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 1.4s ease-in-out infinite;
+    }
+
+    /* ============================================================
+       CORAÇÕES — Explosão com CSS puro
+       Usamos checkboxes :checked para triggerar as animações
+    ============================================================ */
+    .hearts-field {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      display: none;
+    }
+
+    #trigger:checked ~ .hearts-field {
+      display: block;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 1.5rem;
+      opacity: 0;
+      /* cada coração tem left/top e delay definidos inline */
+      bottom: 45%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Variações de tamanho */
+    .heart.sm  { font-size: 1rem; }
+    .heart.md  { font-size: 1.6rem; }
+    .heart.lg  { font-size: 2.2rem; }
+    .heart.xl  { font-size: 2.8rem; }
+
+    /* Animações de subida — 6 trajetórias */
+    @keyframes floatA {
+      0%   { transform: translate(-50%, 0)   scale(0.3); opacity: 0; }
+      15%  { opacity: 1; }
+      80%  { opacity: 0.8; }
+      100% { transform: translate(calc(-50% - 120px), -420px) scale(1.1); opacity: 0; }
+    }
+    @keyframes floatB {
+      0%   { transform: translate(-50%, 0)   scale(0.2); opacity: 0; }
+      15%  { opacity: 1; }
+      80%  { opacity: 0.7; }
+      100% { transform: translate(calc(-50% + 100px), -380px) scale(0.9); opacity: 0; }
+    }
+    @keyframes floatC {
+      0%   { transform: translate(-50%, 0)   scale(0.4); opacity: 0; }
+      10%  { opacity: 1; }
+      75%  { opacity: 0.9; }
+      100% { transform: translate(calc(-50% + 200px), -460px) scale(1.2); opacity: 0; }
+    }
+    @keyframes floatD {
+      0%   { transform: translate(-50%, 0)   scale(0.3); opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 0.6; }
+      100% { transform: translate(calc(-50% - 200px), -400px) scale(0.8); opacity: 0; }
+    }
+    @keyframes floatE {
+      0%   { transform: translate(-50%, 0)   scale(0.5); opacity: 0; }
+      12%  { opacity: 1; }
+      70%  { opacity: 0.85; }
+      100% { transform: translate(calc(-50% + 40px),  -500px) scale(1.3); opacity: 0; }
+    }
+    @keyframes floatF {
+      0%   { transform: translate(-50%, 0)   scale(0.25); opacity: 0; }
+      18%  { opacity: 1; }
+      78%  { opacity: 0.7; }
+      100% { transform: translate(calc(-50% - 60px),  -350px) scale(0.75); opacity: 0; }
+    }
+
+    /* Atribuição das animações com delays variados */
+    .h1  { animation: floatA 2.2s ease-out 0.05s both; }
+    .h2  { animation: floatB 2.5s ease-out 0.15s both; }
+    .h3  { animation: floatC 2.0s ease-out 0.08s both; }
+    .h4  { animation: floatD 2.7s ease-out 0.22s both; }
+    .h5  { animation: floatE 2.3s ease-out 0.30s both; }
+    .h6  { animation: floatF 2.6s ease-out 0.10s both; }
+    .h7  { animation: floatA 2.4s ease-out 0.40s both; }
+    .h8  { animation: floatB 2.1s ease-out 0.18s both; }
+    .h9  { animation: floatC 2.8s ease-out 0.50s both; }
+    .h10 { animation: floatD 2.2s ease-out 0.35s both; }
+    .h11 { animation: floatE 2.5s ease-out 0.60s both; }
+    .h12 { animation: floatF 2.3s ease-out 0.25s both; }
+    .h13 { animation: floatA 2.6s ease-out 0.70s both; }
+    .h14 { animation: floatB 2.0s ease-out 0.45s both; }
+    .h15 { animation: floatC 2.4s ease-out 0.80s both; }
+    .h16 { animation: floatD 2.9s ease-out 0.55s both; }
+    .h17 { animation: floatE 2.1s ease-out 0.90s both; }
+    .h18 { animation: floatF 2.7s ease-out 0.65s both; }
+    .h19 { animation: floatA 2.3s ease-out 1.00s both; }
+    .h20 { animation: floatB 2.5s ease-out 0.75s both; }
+    .h21 { animation: floatC 2.2s ease-out 1.10s both; }
+    .h22 { animation: floatD 2.6s ease-out 0.85s both; }
+    .h23 { animation: floatE 2.4s ease-out 1.20s both; }
+    .h24 { animation: floatF 2.0s ease-out 0.95s both; }
+    .h25 { animation: floatA 2.8s ease-out 1.30s both; }
+    .h26 { animation: floatB 2.3s ease-out 1.05s both; }
+    .h27 { animation: floatC 2.5s ease-out 1.40s both; }
+    .h28 { animation: floatD 2.1s ease-out 1.15s both; }
+    .h29 { animation: floatE 2.7s ease-out 1.50s both; }
+    .h30 { animation: floatF 2.4s ease-out 1.25s both; }
+
+    /* Cores dos corações */
+    .green { color: #00e676; filter: drop-shadow(0 0 6px rgba(0,230,118,0.8)); }
+    .white { color: #f0f4f0; filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
+    .red   { color: #ff2d55; filter: drop-shadow(0 0 6px rgba(255,45,85,0.7)); }
+    .dark-h{ color: #1a2a1a; filter: drop-shadow(0 0 4px rgba(0,230,118,0.3)); }
+
+    /* ============================================================
+       STATS ROW — Métricas decorativas (identidade corporativa)
+    ============================================================ */
+    .stats-row {
+      display: flex;
+      gap: 2px;
+      margin: 52px auto 0;
+      max-width: var(--max-width);
+      width: 100%;
+      padding: 0 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.5s forwards;
+    }
+
+    #trigger:checked ~ .wrapper .stats-row {
+      opacity: 0;
+      animation: fadeUp 0.9s ease 1.8s forwards;
+    }
+
+    .stat-card {
+      flex: 1;
+      min-width: 140px;
+      max-width: 220px;
+      padding: 22px 18px;
+      border: 1px solid var(--border-dim);
+      background: rgba(255,255,255,0.01);
+      text-align: center;
+      transition: border-color var(--transition), background var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--border);
+      background: rgba(0,230,118,0.03);
+    }
+
+    .stat-card:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+    .stat-card:last-child  { border-radius: 0 var(--radius) var(--radius) 0; }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--green);
+      line-height: 1;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--white-dim);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .footer {
+      border-top: 1px solid var(--border-dim);
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: rgba(240,244,240,0.25);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .footer-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--green-dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .footer-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: blink 1.8s ease-in-out infinite;
+    }
+
+    /* ============================================================
+       SCAN LINE — detalhe industrial sutil
+    ============================================================ */
+    .scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,230,118,0.6) 30%,
+        rgba(0,230,118,0.9) 50%,
+        rgba(0,230,118,0.6) 70%,
+        transparent 100%
+      );
+      box-shadow: 0 0 18px rgba(0,230,118,0.4);
+      animation: scanDown 6s linear 2s infinite;
+      pointer-events: none;
+      z-index: 200;
+      opacity: 0;
+    }
+
+    /* ============================================================
+       KEYFRAMES GERAIS
+    ============================================================ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes revealMain {
+      0%   { opacity: 0; transform: translateY(32px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50%       { opacity: 0.15; transform: scale(1.08); }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    @keyframes rocketBounce {
+      0%   { transform: translateY(0) scale(0); opacity: 0; }
+      60%  { transform: translateY(-10px) scale(1.3); opacity: 1; }
+      80%  { transform: translateY(4px) scale(0.95); }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    @keyframes scanDown {
+      0%   { top: -4px; opacity: 0; }
+      5%   { opacity: 1; }
+      90%  { opacity: 0.8; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    /* ============================================================
+       RESPONSIVIDADE
+    ============================================================ */
+
+    /* Tablet */
+    @media (max-width: 768px) {
+      .topbar { padding: 12px 20px; }
+      .topbar-tag { display: none; }
+
+      .hero { padding: 60px 16px 40px; }
+      .hero::before, .hero::after { display: none; }
+
+      .stats-row { gap: 2px; padding: 0 16px; }
+      .stat-card {
+        min-width: 120px;
+        padding: 16px 12px;
+      }
+      .stat-num { font-size: 1.8rem; }
+
+      .footer { padding: 16px 20px; }
+    }
+
+    /* Mobile */
+    @media (max-width: 480px) {
+      .topbar-name { font-size: 1.1rem; }
+
+      .msg-main {
+        font-size: clamp(1.4rem, 7vw, 2rem);
+        padding: 0 16px;
+      }
+
+      .msg-heart-text {
+        font-size: 0.95rem;
+        padding: 0 16px;
+      }
+
+      .stats-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .stat-card {
+        flex: 1 1 calc(50% - 2px);
+        border-radius: 0 !important;
+      }
+
+      .btn-label {
+        padding: 16px 36px;
+        font-size: 0.95rem;
+      }
+
+      .hero-title {
+        font-size: clamp(2.6rem, 14vw, 4rem);
+      }
+
+      /* Corações em mobile: menor escala */
+      .heart.xl { font-size: 1.8rem; }
+      .heart.lg { font-size: 1.4rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       CHECKBOX OCULTO — Mecanismo de interação CSS puro
+  ============================================================ -->
+  <input type="checkbox" id="trigger" />
+
+  <!-- ============================================================
+       LINHA DE SCAN — Efeito industrial decorativo
+  ============================================================ -->
+  <div class="scanline"></div>
+
+  <!-- ============================================================
+       CORAÇÕES — Posicionados ao redor do centro da tela
+       Aparecem quando #trigger está :checked
+  ============================================================ -->
+  <div class="hearts-field" aria-hidden="true">
+    <!-- Verde -->
+    <span class="heart green md h1"  style="left:50%; bottom:46%">💚</span>
+    <span class="heart green lg h3"  style="left:48%; bottom:44%">💚</span>
+    <span class="heart green xl h5"  style="left:52%; bottom:47%">💚</span>
+    <span class="heart green sm h7"  style="left:46%; bottom:45%">💚</span>
+    <span class="heart green md h9"  style="left:53%; bottom:43%">💚</span>
+    <span class="heart green lg h11" style="left:49%; bottom:48%">💚</span>
+    <span class="heart green sm h13" style="left:55%; bottom:46%">💚</span>
+    <span class="heart green md h15" style="left:47%; bottom:42%">💚</span>
+    <span class="heart green xl h17" style="left:51%; bottom:45%">💚</span>
+    <span class="heart green sm h19" style="left:54%; bottom:47%">💚</span>
+
+    <!-- Branco -->
+    <span class="heart white sm h2"  style="left:51%; bottom:45%">🤍</span>
+    <span class="heart white md h6"  style="left:47%; bottom:46%">🤍</span>
+    <span class="heart white lg h10" style="left:53%; bottom:44%">🤍</span>
+    <span class="heart white sm h14" style="left:49%; bottom:47%">🤍</span>
+    <span class="heart white md h18" style="left:52%; bottom:43%">🤍</span>
+    <span class="heart white sm h22" style="left:50%; bottom:46%">🤍</span>
+    <span class="heart white lg h26" style="left:48%; bottom:44%">🤍</span>
+
+    <!-- Vermelho -->
+    <span class="heart red md h4"   style="left:50%; bottom:46%">❤️</span>
+    <span class="heart red lg h8"   style="left:52%; bottom:45%">❤️</span>
+    <span class="heart red sm h12"  style="left:48%; bottom:44%">❤️</span>
+    <span class="heart red xl h16"  style="left:51%; bottom:47%">❤️</span>
+    <span class="heart red md h20"  style="left:49%; bottom:43%">❤️</span>
+    <span class="heart red sm h24"  style="left:53%; bottom:46%">❤️</span>
+    <span class="heart red lg h28"  style="left:47%; bottom:45%">❤️</span>
+
+    <!-- Verde escuro (profundidade) -->
+    <span class="heart dark-h sm h21" style="left:51%; bottom:45%">💚</span>
+    <span class="heart dark-h md h23" style="left:50%; bottom:46%">💚</span>
+    <span class="heart dark-h lg h25" style="left:52%; bottom:44%">💚</span>
+    <span class="heart dark-h sm h27" style="left:48%; bottom:47%">💚</span>
+    <span class="heart dark-h md h29" style="left:53%; bottom:45%">💚</span>
+    <span class="heart dark-h xl h30" style="left:49%; bottom:43%">💚</span>
+  </div>
+
+  <!-- ============================================================
+       WRAPPER PRINCIPAL
+  ============================================================ -->
+  <div class="wrapper">
+
+    <!-- ── TOPBAR ── -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <div class="topbar-icon"></div>
+        <div class="topbar-name">KOUBE <span>QUÍMICA</span></div>
+      </div>
+      <div class="topbar-tag">Portal RH — Área Interna</div>
+    </header>
+
+    <!-- ── HERO ── -->
+    <main class="hero">
+
+      <p class="hero-pretitle">// Sistema de Reconhecimento — Koube</p>
+
+      <h1 class="hero-title">
+        Gestão <span>Humana</span><br/>de Excelência
+      </h1>
+
+      <div class="hero-divider"></div>
+
+      <p class="hero-sub">
+        Por trás de cada processo, de cada contratação,<br/>
+        de cada pessoa que chegou — existe uma equipe<br/>
+        que faz isso acontecer com dedicação e precisão.
+      </p>
+
+      <!-- BOTÃO — label do checkbox -->
+      <div class="btn-wrapper">
+        <label class="btn-label" for="trigger">
+          Clique aqui 💚
+        </label>
+      </div>
+
+      <!-- ── CONTEÚDO REVELADO ── -->
+      <div class="reveal-content">
+
+        <!-- Mensagem principal -->
+        <p class="msg-main">
+          Para o RH da Koube Química:<br/>
+          vocês são simplesmente<br/>
+          as <strong>melhores</strong>&nbsp;<span class="emoji">🚀</span>
+        </p>
+
+        <!-- Divisor visual -->
+        <div class="msg-divider"></div>
+
+        <!-- Mensagem carinhosa -->
+        <div class="msg-heart">
+          <p class="msg-heart-text">
+            Vocês <em>fazem a diferença</em> todos os dias —<br/>
+            com cuidado, com olhar humano,<br/>
+            com a força silenciosa que move toda a empresa. 💚
+          </p>
+
+          <!-- Badge de status -->
+          <div class="badge">Reconhecimento ativo — Equipe RH Koube</div>
+        </div>
+
+      </div>
+      <!-- /reveal-content -->
+
+      <!-- ── STATS ROW ── -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Dedicação</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Impacto</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">+1</div>
+          <div class="stat-label">Equipe Incrível</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">💚</div>
+          <div class="stat-label">Reconhecimento</div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer class="footer">
+      <span class="footer-copy">© 2025 Koube Química — Todos os direitos reservados</span>
+      <span class="footer-status">
+        <span class="footer-dot"></span>
+        Sistema Online — RH
+      </span>
+    </footer>
+
+  </div>
+  <!-- /wrapper -->
+
+</body>
+</html>
